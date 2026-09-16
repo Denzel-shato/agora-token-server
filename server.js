@@ -17,7 +17,11 @@ app.get("/token", async (req, res) => {
   try {
     decoded = await admin.auth().verifyIdToken(authHeader.split(" ")[1]);
   } catch (e) {
-    return res.status(401).json({ error: "Invalid auth token" });
+    console.error("Firebase auth verification error:", e);
+
+    return res.status(401).json({
+      error: e.message,
+    });
   }
 
   const callDoc = await db.collection("Calls").doc(channelName).get();
