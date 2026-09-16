@@ -1,10 +1,17 @@
-const admin = require("firebase-admin");
-admin.initializeApp({ credential: admin.credential.applicationDefault() });
-const db = admin.firestore();
+const { initializeApp, applicationDefault } = require("firebase-admin/app");
+const { getFirestore } = require("firebase-admin/firestore");
+const { getAuth } = require("firebase-admin/auth");
+
+initializeApp({
+  credential: applicationDefault(),
+});
+
+const db = getFirestore();
+const auth = getAuth();
 
 app.get("/token", async (req, res) => {
   const { channelName } = req.query;
-  const authHeader = req.headers.authorization; 
+  const authHeader = req.headers.authorization;
 
   if (!channelName) {
     return res.status(400).json({ error: "channelName is required" });
@@ -15,7 +22,7 @@ app.get("/token", async (req, res) => {
 
   let decoded;
   try {
-    decoded = await admin.auth().verifyIdToken(authHeader.split(" ")[1]);
+  decoded = await auth.verifyIdToken(authHeader.split(" ")[1]);
   } catch (e) {
     console.error("Firebase auth verification error:", e);
 
